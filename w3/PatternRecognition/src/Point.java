@@ -24,6 +24,9 @@ public class Point implements Comparable<Point> {
      */
     public Point(int x, int y) {
         /* DO NOT MODIFY */
+        if ((x > 32767) || (x < 0)) throw new IllegalArgumentException();
+        if ((y > 32767) || (y < 0)) throw new IllegalArgumentException();
+
         this.x = x;
         this.y = y;
     }
@@ -63,8 +66,10 @@ public class Point implements Comparable<Point> {
             return Double.POSITIVE_INFINITY;
         } else if ((this.x == that.x) && (this.y == that.y)) {
             return Double.NEGATIVE_INFINITY;
+        } else if (this.y == that.y) {
+            return +0.0;
         } else {
-            return (that.y - this.y)/(that.x - this.x);
+            return (double)(that.y - this.y)/(that.x - this.x);
         }
     }
 
@@ -101,7 +106,10 @@ public class Point implements Comparable<Point> {
     public Comparator<Point> slopeOrder() {
         class BySlope implements Comparator<Point> {
             public int compare(Point point1, Point point2) {
-                return (int) (slopeTo(point1) - slopeTo(point2));
+                double d = slopeTo(point1) - slopeTo(point2);
+                if (d > 0) return 1;
+                else if (d < 0) return -1;
+                else return 0;
             }
         }
         return new BySlope();
@@ -125,8 +133,8 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */
-        Point p1 = new Point(1, 1);
-        Point p2 = new Point(2, 2);
+        Point p1 = new Point(44, 298);
+        Point p2 = new Point(15, 298);
         Comparator c = p1.slopeOrder();
         System.out.println(c.compare(p2, p1));
         // p1.draw();
